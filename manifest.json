@@ -1,0 +1,11 @@
+{
+  "name": "Dreditor",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "matches": ["http://drupal.org/*"],
+      "css": ["dreditor.css"],
+      "js": ["jquery-1.4.2.min.js", "dreditor.js"]
+    }
+  ]
+}

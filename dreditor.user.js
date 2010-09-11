@@ -428,9 +428,7 @@ Drupal.dreditor.form.form = function (o, id) {
   // Override the default submit handler.
   self.submit(function (e) {
     // Invoke the submit handler of the clicked button.
-    console.log(e);
-    console.log(e.originalEvent);
-    
+    //TODO: Need to get the right values As it can be Save or Cancel
     var op = 'Save';
     if (self.submitHandlers[op]) {
       self.submitHandlers[op](this, self);
@@ -1445,42 +1443,3 @@ jQuery(document).ready(function () {
 window.addEventListener('unload', function () {
   Drupal.dreditor.conf = $.param(Drupal.dreditor.conf);
 }, true);
-
-
-/**
- * Check for new Dreditor versions.
- *
- * GM functions can be invoked from GM environment only.
- */
-dreditorUpdateCheck = function () {
-  if (typeof GM_xmlhttpRequest != 'function') {
-    return;
-  }
-  var version = GM_getValue('version', '');
-  var lastChecked = GM_getValue('update.last', 0);
-  var now = parseInt(new Date() / 1000, 10);
-  // Check every 3 days.
-  var interval = 60 * 60 * 24 * 3;
-  if (lastChecked - now < -interval) {
-    // Whatever happens to this request, remember that we tried.
-    GM_setValue('update.last', now);
-    GM_xmlhttpRequest({
-      method: 'GET',
-      url: 'http://drupalcode.org/viewvc/drupal/contributions/modules/dreditor/CHANGELOG.txt?view=co',
-      onload: function (responseDetails) {
-        if (responseDetails.status == 200) {
-          var newversion = responseDetails.responseText.match(/\$Id.+\$/)[0];
-          if (newversion == version) {
-            return;
-          }
-          var doUpdate = window.confirm('A new version of Dreditor is available. Shall we visit the project page to update?');
-          if (doUpdate) {
-            window.open('http://drupal.org/project/dreditor', 'dreditor');
-            // Let's just assume that we DID update. ;)
-            GM_setValue('version', newversion);
-          }
-        }
-      }
-    });
-  }
-};

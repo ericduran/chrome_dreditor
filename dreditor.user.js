@@ -1,9 +1,10 @@
+// Modified Dreditor Script
+// This script has been modified by Eric J. Duran (ericduran) to work with Chrome.
 // ==UserScript==
 // @name           Dreditor
 // @namespace      http://drupal.org/project/dreditor
 // @description    Awesomeness for drupal.org.
 // @author         Daniel F. Kudwien (sun)
-// @version        0.1
 // @include        http://drupal.org/node/*
 // @include        http://drupal.org/comment/reply/*
 // @include        http://drupal.org/project/*
@@ -12,7 +13,7 @@
 
 // Initialize window objects.
 $ = jQuery;
-var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
+var Drupal = Drupal;
 
 // Bail out in (the unlikely) case that JS has been disabled.
 if (Drupal === undefined) {

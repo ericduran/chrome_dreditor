@@ -1,5 +1,5 @@
 --- dreditor.user.js.orig	2010-09-11 16:05:13.000000000 -0400
-+++ dreditor.user.js	2010-09-11 18:34:18.000000000 -0400
++++ dreditor.user.js	2010-09-11 18:38:32.000000000 -0400
 @@ -1,9 +1,10 @@
 +// Modified Dreditor Script
 +// This script has been modified by Eric J. Duran (ericduran) to work with Chrome.
@@ -33,19 +33,17 @@
  
      args = jQuery.makeArray(arguments);
      // Determine data source; this is an object for $variable.debug().
-@@ -426,7 +428,10 @@ Drupal.dreditor.form.form = function (o,
+@@ -426,7 +428,8 @@ Drupal.dreditor.form.form = function (o,
    // Override the default submit handler.
    self.submit(function (e) {
      // Invoke the submit handler of the clicked button.
 -    var op = e.originalEvent.explicitOriginalTarget.value;
-+    console.log(e);
-+    console.log(e.originalEvent);
-+    
++    //TODO: Need to get the right values As it can be Save or Cancel
 +    var op = 'Save';
      if (self.submitHandlers[op]) {
        self.submitHandlers[op](this, self);
      }
-@@ -1430,7 +1435,7 @@ Drupal.behaviors.dreditorIssuesFormReset
+@@ -1430,7 +1433,7 @@ Drupal.behaviors.dreditorIssuesFormReset
   *   outside of .ready(), since Dreditor's behaviors were suddenly invoked with
   *   drupal.org's behaviors, i.e., this might depend on browser/GM version.
   */
@@ -54,14 +52,13 @@
  Drupal.dreditor.confInit();
  jQuery(document).ready(function () {
    Drupal.attachBehaviors(this);
-@@ -1438,58 +1443,9 @@ jQuery(document).ready(function () {
+@@ -1438,96 +1441,5 @@ jQuery(document).ready(function () {
  
  // GM_setValue() is only allowed in the user script context.
  window.addEventListener('unload', function () {
 -  GM_setValue('dreditor.conf', $.param(Drupal.dreditor.conf));
-+  Drupal.dreditor.conf = $.param(Drupal.dreditor.conf);
- }, true);
- 
+-}, true);
+-
 -// Add custom stylesheet.
 -// @todo Can we load CSS files that ship with this user script?
 -GM_addStyle(" \
@@ -111,13 +108,47 @@
 -#dreditor-issue-data .inline-options .form-item { margin-bottom: 0.3em; } \
 -.rounded-corners { padding: 10px; width: auto; -moz-border-radius: 8px; border-radius: 8px; } \
 -");
- 
- /**
-  * Check for new Dreditor versions.
-@@ -1528,6 +1484,3 @@ dreditorUpdateCheck = function () {
-     });
-   }
- };
+-
+-/**
+- * Check for new Dreditor versions.
+- *
+- * GM functions can be invoked from GM environment only.
+- */
+-dreditorUpdateCheck = function () {
+-  if (typeof GM_xmlhttpRequest != 'function') {
+-    return;
+-  }
+-  var version = GM_getValue('version', '');
+-  var lastChecked = GM_getValue('update.last', 0);
+-  var now = parseInt(new Date() / 1000, 10);
+-  // Check every 3 days.
+-  var interval = 60 * 60 * 24 * 3;
+-  if (lastChecked - now < -interval) {
+-    // Whatever happens to this request, remember that we tried.
+-    GM_setValue('update.last', now);
+-    GM_xmlhttpRequest({
+-      method: 'GET',
+-      url: 'http://drupalcode.org/viewvc/drupal/contributions/modules/dreditor/CHANGELOG.txt?view=co',
+-      onload: function (responseDetails) {
+-        if (responseDetails.status == 200) {
+-          var newversion = responseDetails.responseText.match(/\$Id.+\$/)[0];
+-          if (newversion == version) {
+-            return;
+-          }
+-          var doUpdate = window.confirm('A new version of Dreditor is available. Shall we visit the project page to update?');
+-          if (doUpdate) {
+-            window.open('http://drupal.org/project/dreditor', 'dreditor');
+-            // Let's just assume that we DID update. ;)
+-            GM_setValue('version', newversion);
+-          }
+-        }
+-      }
+-    });
+-  }
+-};
 -
 -dreditorUpdateCheck();
 -
++  Drupal.dreditor.conf = $.param(Drupal.dreditor.conf);
++}, true);
+\ No newline at end of file

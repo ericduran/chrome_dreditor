@@ -1,29 +1,19 @@
 --- dreditor.user.js.orig	2010-09-11 16:05:13.000000000 -0400
-+++ dreditor.user.js	2010-09-11 18:31:44.000000000 -0400
-@@ -1,18 +1,20 @@
--// ==UserScript==
--// @name           Dreditor
--// @namespace      http://drupal.org/project/dreditor
--// @description    Awesomeness for drupal.org.
--// @author         Daniel F. Kudwien (sun)
--// @version        0.1
--// @include        http://drupal.org/node/*
--// @include        http://drupal.org/comment/reply/*
--// @include        http://drupal.org/project/*
--// @include        http://drupal.org/node/add/project-issue/*
--// ==/UserScript==
++++ dreditor.user.js	2010-09-11 18:34:18.000000000 -0400
+@@ -1,9 +1,10 @@
 +// Modified Dreditor Script
-+// This script has been modified to work with Chrome.
-+-// ==UserScript==
-+-// @name           Dreditor
-+-// @namespace      http://drupal.org/project/dreditor
-+-// @description    Awesomeness for drupal.org.
-+-// @author         Daniel F. Kudwien (sun)
-+-// @include        http://drupal.org/node/*
-+-// @include        http://drupal.org/comment/reply/*
-+-// @include        http://drupal.org/project/*
-+-// @include        http://drupal.org/node/add/project-issue/*
-+-// ==/UserScript==
++// This script has been modified by Eric J. Duran (ericduran) to work with Chrome.
+ // ==UserScript==
+ // @name           Dreditor
+ // @namespace      http://drupal.org/project/dreditor
+ // @description    Awesomeness for drupal.org.
+ // @author         Daniel F. Kudwien (sun)
+-// @version        0.1
+ // @include        http://drupal.org/node/*
+ // @include        http://drupal.org/comment/reply/*
+ // @include        http://drupal.org/project/*
+@@ -11,8 +12,9 @@
+ // ==/UserScript==
  
  // Initialize window objects.
 -$ = window.$ = window.jQuery = unsafeWindow.jQuery;

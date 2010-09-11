@@ -5,7 +5,7 @@
     {
       "matches": ["http://drupal.org/*"],
       "css": ["dreditor.css"],
-      "js": ["jquery-1.4.2.min.js", "dreditor.js"]
+      "js": ["dreditor.js", "dreditor.user.js"]
     }
   ]
 }

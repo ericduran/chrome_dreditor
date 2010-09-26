@@ -604,7 +604,8 @@ Drupal.dreditor.patchReview = {
       // Add comment delete button for existing comments.
       if (self.data.id !== undefined) {
         self.$form.addButton('Delete', function (form, $form) {
-          self.comment.delete(self.data.id);
+          // TODO: fix for chrome 6.x It doesn't like the delete
+          //self.comment.delete(self.data.id);
           // Reset pastie.
           self.reset();
         });
@@ -800,7 +801,9 @@ Drupal.dreditor.patchReview.comment = {
       var data = this.comments[id];
     }
     return data || {};
-  },
+  }
+  // TODO: Fix for chrome 6.x It doesn't like the delete 
+ /*  ,
 
   delete: function (id) {
     var data = this.load(id);
@@ -813,7 +816,7 @@ Drupal.dreditor.patchReview.comment = {
       delete this.comments[id];
     }
     return data || {};
-  }
+  } */
 };
 
 Drupal.dreditor.patchReview.overlay = {

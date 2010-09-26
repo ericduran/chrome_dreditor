@@ -425,10 +425,12 @@ Drupal.dreditor.form.form = function (o, id) {
   // Turn this object into a jQuery object, being a form. :)
   $.extend(true, self, $('<form id="' + id + '"></form>'));
 
-  // Override the default submit handler.
+  // Override the default click handler for the buttons.
+  // Chrome doesn't have a firefox (explicitOriginalTarget) equivalant
+  // so we're better of using the click even
   self.submit(function (e) {
     // Invoke the submit handler of the clicked button.
-    //TODO: Need to get the right values As it can be Save or Cancel
+    //var op = e.originalEvent.explicitOriginalTarget.value;
     var op = 'Save';
     if (self.submitHandlers[op]) {
       self.submitHandlers[op](this, self);

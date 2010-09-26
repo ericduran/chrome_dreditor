@@ -1,3 +1,3 @@
-This project has been deleted.
+This project is a temporary solution for Dreditor on Chrome.
 
-http://drupal.org/node/577412
+More info can be found at http://drupal.org/node/577412

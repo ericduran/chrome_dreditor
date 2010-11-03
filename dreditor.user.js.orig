@@ -11,8 +11,8 @@
 // ==/UserScript==
 
 // Initialize window objects.
-$ = jQuery;
-Drupal = Drupal;
+$ = window.$ = window.jQuery = unsafeWindow.jQuery;
+Drupal = window.Drupal = unsafeWindow.Drupal;
 // Bail out in (the unlikely) case that JS has been disabled.
 if (Drupal === undefined) {
   return false;
@@ -33,7 +33,7 @@ if (Drupal === undefined) {
 jQuery.extend({
   debug: function () {
     // Setup debug storage in global window. We want to look into it.
-    window.debug = debug = window.debug || [];
+    window.debug = unsafeWindow.debug = window.debug || [];
 
     args = jQuery.makeArray(arguments);
     // Determine data source; this is an object for $variable.debug().
@@ -426,7 +426,7 @@ Drupal.dreditor.form.form = function (o, id) {
   // Override the default submit handler.
   self.submit(function (e) {
     // Invoke the submit handler of the clicked button.
-    var op = 'Save';
+    var op = e.originalEvent.explicitOriginalTarget.value;
     if (self.submitHandlers[op]) {
       self.submitHandlers[op](this, self);
     }
@@ -1479,7 +1479,7 @@ Drupal.behaviors.dreditorIssuesFilterFormReset = function (context) {
  *   outside of .ready(), since Dreditor's behaviors were suddenly invoked with
  *   drupal.org's behaviors, i.e., this might depend on browser/GM version.
  */
-Drupal.dreditor.conf = '';
+Drupal.dreditor.conf = GM_getValue('dreditor.conf', '');
 Drupal.dreditor.confInit();
 jQuery(document).ready(function () {
   Drupal.attachBehaviors(this);
@@ -1489,3 +1489,93 @@ jQuery(document).ready(function () {
 window.addEventListener('unload', function () {
   GM_setValue('dreditor.conf', $.param(Drupal.dreditor.conf));
 }, true);
+
+// Add custom stylesheet.
+// @todo Can we load CSS files that ship with this user script?
+GM_addStyle(" \
+#dreditor-wrapper { position: fixed; z-index: 1000; width: 100%; top: 0; } \
+#dreditor { position: relative; width: 100%; height: 100%; background-color: #fff; border: 1px solid #ccc; } \
+#dreditor #bar, #dreditor-actions { width: 230px; padding: 0 10px; font: 10px/18px sans-serif, verdana, tahoma, arial; } \
+#dreditor #bar { position: absolute; height: 100%; } \
+#dreditor-actions { background-color: #fff; bottom: 0; padding-top: 5px; padding-bottom: 5px; position: absolute; } \
+.dreditor-button, #content a.dreditor-button { background: transparent url(/sites/all/themes/bluecheese/images/sprites-horizontal.png) repeat-x 0 -1150px; border: 1px solid #28d; color: #fff; cursor: pointer; font: 11px sans-serif, verdana, tahoma, arial; font-weight: bold; padding: 0.1em 0.8em; text-transform: uppercase; text-decoration: none; -moz-border-radius: 7px; -webkit-border-radius: 7px; border-radius: 7px; } \
+.dreditor-button:hover, #content a.dreditor-button:hover { background-position: 0 -1100px; } \
+.dreditor-button { margin: 0 0.5em 0 0; } \
+table .dreditor-button { margin-left: 1em; } \
+#dreditor #menu { margin: 0; max-height: 30%; overflow-y: scroll; padding: 0; } \
+#dreditor #menu li { list-style: none; margin: 0; overflow: hidden; padding: 0 0.5em 0 0; white-space: nowrap; } \
+#dreditor #menu li li { padding: 0 0 0 1em; } \
+#dreditor #menu > li > a { display: block; padding: 0 0 0 0.2em; background-color: #f0f0f0; } \
+#dreditor a { text-decoration: none; } \
+#dreditor .form-textarea { width: 100%; height: 12em; font: 13px 'courier new', courier, 'lucida console'; color: #000; } \
+#dreditor-content { margin-left: 250px; border-left: 1px solid #ccc; overflow: scroll; height: 100%; } \
+#dreditor-content, pre { font: 13px 'courier new', courier, 'lucida console'; } \
+#dreditor #code { background: transparent url(/sites/all/themes/bluebeach/shade.png) repeat-y scroll 50.7em 0; padding-left: 10px; } \
+#dreditor #code pre { background-color: transparent; border: 0; margin: 0; padding: 0; } \
+#dreditor #code pre span { display: inline-block; margin-left: 1px; width: 2px; height: 7px; background-color: #ddd; } \
+#dreditor #code pre span.error { background-color: #f99; line-height: 100%; width: auto; height: auto; border: 0; } \
+#dreditor #code pre span.error.eof { color: #fff; background-color: #f66; } \
+#dreditor #code pre span.error.tab { background-color: #fdd; } \
+#dreditor #code pre span.hidden { display: none; } \
+#dreditor #code .file { color: #088; } \
+#dreditor #code .old { color: #c00; } \
+#dreditor #code .new { color: #00c; } \
+#dreditor #code .comment { color: #070; } \
+#dreditor #code .has-comment { background-color: rgba(255, 200, 200, 0.5); } \
+#dreditor #code .selected { background-color: rgba(255, 255, 200, 0.5); } \
+.element-invisible { height: 0; overflow: hidden; position: absolute; } \
+#dreditor-overlay { } \
+ \
+.dreditor-actions { overflow: hidden; position: relative; } \
+a.dreditor-application-toggle { display: inline-block; padding: 0.05em 0.3em; line-height: 150%; border: 1px solid #ccc; background-color: #fafcfe; font-weight: normal; text-decoration: none; } \
+#content a.dreditor-application-toggle { float: right; margin: 0 0 0 0.5em; } \
+.dreditor-input { border: 1px solid #ccc; padding: 0.2em 0.3em; font-size: 100%; line-height: 150%; } \
+ \
+div.dreditor-issuecount { line-height: 200%; } \
+.dreditor-issuecount a { padding: 0 0.3em; } \
+ \
+#content .fieldset-flat { display: block; border: 0; width: auto; padding: 0; } \
+.fieldset-flat > legend { display: none; } \
+#dreditor-issue-data #edit-title-wrapper { margin-top: 0; } \
+#dreditor-issue-data .inline-options .form-item { margin-bottom: 0.3em; } \
+");
+
+/**
+ * Check for new Dreditor versions.
+ *
+ * GM functions can be invoked from GM environment only.
+ */
+dreditorUpdateCheck = function () {
+  if (typeof GM_xmlhttpRequest != 'function') {
+    return;
+  }
+  var version = GM_getValue('version', '');
+  var lastChecked = GM_getValue('update.last', 0);
+  var now = parseInt(new Date() / 1000, 10);
+  // Check every 3 days.
+  var interval = 60 * 60 * 24 * 3;
+  if (lastChecked - now < -interval) {
+    // Whatever happens to this request, remember that we tried.
+    GM_setValue('update.last', now);
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: 'http://drupalcode.org/viewvc/drupal/contributions/modules/dreditor/CHANGELOG.txt?view=co',
+      onload: function (responseDetails) {
+        if (responseDetails.status == 200) {
+          var newversion = responseDetails.responseText.match(/\$Id.+\$/)[0];
+          if (newversion == version) {
+            return;
+          }
+          var doUpdate = window.confirm('A new version of Dreditor is available. Shall we visit the project page to update?');
+          if (doUpdate) {
+            window.open('http://drupal.org/project/dreditor', 'dreditor');
+            // Let's just assume that we DID update. ;)
+            GM_setValue('version', newversion);
+          }
+        }
+      }
+    });
+  }
+};
+
+dreditorUpdateCheck();
